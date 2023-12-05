@@ -17,7 +17,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: white;
             color: #333;
             margin: 0;
             padding: 0;
@@ -66,7 +66,7 @@
         <th>Title</th>
         <th>Content</th>
         <th>Author</th>
-        <%-- Add more columns as needed --%>
+
     </tr>
     </thead>
     <tbody>
@@ -76,7 +76,7 @@
             <td>${recipe.title}</td>
             <td>${recipe.content}</td>
             <td>${recipe.author}</td>
-                <%-- Add more columns as needed --%>
+
         </tr>
     </c:forEach>
     </tbody>

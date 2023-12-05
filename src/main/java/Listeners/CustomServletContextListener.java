@@ -31,15 +31,21 @@ public class CustomServletContextListener implements ServletContextListener {
         ServletContext servletContext = servletContextEvent.getServletContext();
 
         FileRepository filesRepository = new FileRepositoryJbdcImpl(dataSource);
+
         try {
             AccountRepository accountRepository = new AccountRepositoryJbdcImpl(dataSource.getConnection());
             servletContext.setAttribute("accountRep", accountRepository);
+            RecipeRepository recipeRepository = new RecipeRepositoryImpl(dataSource.getConnection());
+            servletContext.setAttribute("recipes", recipeRepository);
+            RecipeService recipeService = new RecipeService(recipeRepository);
+            servletContext.setAttribute("recipeService", recipeService);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         FileService fileService = new FileServiceImpl(filesRepository);
         servletContext.setAttribute("filesRepository", filesRepository);
         servletContext.setAttribute("filesUploadService", fileService);
+
     }
 
     @Override

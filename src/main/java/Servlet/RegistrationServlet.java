@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.UUID;
 
 @WebServlet("/register")
 public class RegistrationServlet extends HttpServlet {
@@ -46,6 +48,27 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Cookie[] cookies = request.getCookies();
+        UUID userUUID = null;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("id".equals(cookie.getName())) {
+                    userUUID = UUID.fromString(cookie.getValue());
+                    break;
+                }
+            }
+        }
+        if (userUUID != null) {
+            try {
+                if (accountRepository.findUUID(userUUID)) {
+                    response.sendRedirect("/recipe");
+                    return;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
         request.getRequestDispatcher("/jsp/register.jsp").forward(request,response);
     }
 
